@@ -31,4 +31,38 @@ class ServiceOracleDepartamentos:
       cursor.close()
       return modelo
 
+   def borrarDepartamento(self,numero):
+      sql = "delete from DEPT where DEPT_NO = :p1"
+      cursor= self.connection.cursor()
+      cursor.execute(sql,(numero,))
+      registro = cursor.rowcount
+      self.connection.commit()
+      cursor.close()
+      return registro
    
+
+   def modificarDepartamento(self, numero, nombre, localidad):
+      sql = "update DEPT set DNOMBRE=:p1, LOC=:p2 where DEPT_NO=:p3"
+      cursor=self.connection.cursor()
+      cursor.execute(sql,(nombre, localidad, numero))
+      registro = cursor.rowcount
+      self.connection.commit()
+      cursor.close() 
+      return registro
+    
+   def getAllDepartamentos(self):
+      sql = "select * from DEPT"
+      cursor = self.connection.cursor()
+      cursor.execute(sql)
+      #creamos una lista para almacenar cada departamento
+      datos = []
+      #recorremos el cursor de datos
+      for row in cursor:
+         #por cada vuelta de bucle hay que crear un nuevo objeto, en este caso departamento
+         dept = departamento.Departamento()
+         dept.numero = row[0]
+         dept.nombre = row [1]
+         dept.localidad = row [2]
+         datos.append(dept) #aquí almaceno todos los datos del objeto departamento
+      cursor.close()
+      return datos
